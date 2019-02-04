@@ -1,0 +1,26 @@
+{
+  "name": "http-api-assignment",
+  "version": "1.0.0",
+  "description": "Node.js server running a basic api.",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests Completed\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdm4344/http-api-assignment.git"
+  },
+  "author": "Jordan Machalek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jdm4344/http-api-assignment/issues"
+  },
+  "homepage": "https://github.com/jdm4344/http-api-assignment#readme",
+  "devDependencies": {
+    "eslint": "^5.13.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  }
+}
