@@ -11,6 +11,7 @@ const urlStruct = {
   '/forbidden': responseHandler.getIndex,
   '/internal': responseHandler.getIndex,
   '/notImplemented': responseHandler.getIndex,
+  '/style.css': responseHandler.getCss,
   index: responseHandler.getIndex,
 };
 

@@ -4,7 +4,7 @@
   "description": "Node.js server running a basic api.",
   "main": "./src/server.js",
   "scripts": {
-    "start": "./src/server.js",
+    "start": "node ./src/server.js",
     "pretest": "eslint ./src --fix",
     "test": "echo \"Tests Completed\""
   },
