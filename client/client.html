@@ -23,26 +23,12 @@
       if(type == "application/json"){
         const obj = JSON.parse(xhr.response);
 
-        // Check if ID exists - will for failures
-        if(obj.id) { 
-          status.textContent = `${obj.id}`; 
-          message.textContent = `${obj.message}`;
-        } 
-        else {
-          status.textContent = "";
-          message.textContent = `${obj.message}`;
-        }
+        status.textContent = document.querySelector("#page").value; 
+        message.textContent = `${obj.message}`;
       } 
       else if(type == "text/xml"){
-        // Check if ID exists - will for failures
-        if(xhr.responseXML.querySelector("id")){
-          status.textContent = xhr.responseXML.querySelector("id").textContent;
-          message.textContent = xhr.responseXML.querySelector("message").textContent;
-        }
-        else{
-          status.textContent = "";
-          message.textContent = xhr.responseXML.querySelector("message").textContent;
-        }
+        status.textContent = document.querySelector("#page").value;
+        message.textContent = xhr.responseXML.querySelector("message").textContent;
       }
 
       // Add the status and message to the page

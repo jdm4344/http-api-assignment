@@ -18,8 +18,7 @@ const urlStruct = {
   notFound: responseHandler.notFound,
 };
 
-const handlePost = (request, response, parsedUrl, acceptedTypes) => {
-  console.dir("In handlePost");
+const handleGet = (request, response, parsedUrl, acceptedTypes) => {
   if (parsedUrl.pathname === '/badRequest') {
     const body = [];
 
@@ -36,9 +35,10 @@ const handlePost = (request, response, parsedUrl, acceptedTypes) => {
     request.on('end', () => {
       const bodyString = Buffer.concat(body).toString();
       const bodyParams = query.parse(bodyString); // convert string to JSON object
-      console.dir(bodyParams);
 
-      responseHandler.parseResponse(request, response, acceptedTypes, parsedUrl.pathname, true);
+      if (bodyParams.valid === 'true') {
+        responseHandler.parseResponse(request, response, acceptedTypes, parsedUrl.pathname, true);
+      }
     });
   } else if (parsedUrl.pathname === '/unauthorized') {
     const body = [];
@@ -56,16 +56,17 @@ const handlePost = (request, response, parsedUrl, acceptedTypes) => {
     request.on('end', () => {
       const bodyString = Buffer.concat(body).toString();
       const bodyParams = query.parse(bodyString); // convert string to JSON object
-      console.dir(bodyParams);
 
-      responseHandler.parseResponse(
-        request,
-        response,
-        acceptedTypes,
-        parsedUrl.pathname,
-        false,
-        true,
-      );
+      if (bodyParams.loggedIn === 'yes') {
+        responseHandler.parseResponse(
+          request,
+          response,
+          acceptedTypes,
+          parsedUrl.pathname,
+          false,
+          true,
+        );
+      }
     });
   }
 };
@@ -75,10 +76,14 @@ const onRequest = (request, response) => {
   // console.dir("onRequest: " + parsedUrl.pathname);
   const acceptedTypes = request.headers.accept.split(','); // header is a string divided by commas
 
-  if (request.method === 'POST') {
-    handlePost(request, response, parsedUrl, acceptedTypes);
-  } else if (urlStruct[parsedUrl.pathname]) { // Check if request is for XML, if not, send JSON
+  if (urlStruct[parsedUrl.pathname]) { // Check if request is for XML, if not, send JSON
     urlStruct[parsedUrl.pathname](request, response, acceptedTypes, parsedUrl.pathname);
+
+    console.dir(`Pathname: ${parsedUrl.pathname}`);
+
+    if (request.method === 'GET') {
+      handleGet(request, response, parsedUrl, acceptedTypes);
+    }
     // responseHandler.parseResponse(request, response, acceptedTypes, parsedUrl.pathname);
   } else {
     urlStruct.notFound(request, response, acceptedTypes, parsedUrl.pathname);

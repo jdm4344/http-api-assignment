@@ -64,42 +64,44 @@ const parseResponse = (request, response, acceptedTypes, path, valid = false, lo
   if (acceptedTypes[0] === 'text/xml') {
     switch (path) {
       case '/success':
-        return respondXML(request, response, 200, 'Success');
+        return respondXML(request, response, 200, 'This is a successful response.');
       case '/badRequest':
-        if (valid) { return respondXML(request, response, 200, 'Bad Request'); }
-        return respondXML(request, response, 400, 'Bad Request');
+        if (valid) { return respondXML(request, response, 200, 'This request has the required parameters.'); }
+        return respondXML(request, response, 400, 'Missing valid query parameter set to true.');
       case '/unauthorized':
-        if (loggedIn) { return respondXML(request, response, 200, 'Unauthorized'); }
-        return respondXML(request, response, 401, 'Unauthorized');
+        if (loggedIn) { return respondXML(request, response, 200, 'You have successfully viewed the content.'); }
+        return respondXML(request, response, 401, 'Missing loggedIn query parameter set to yes.');
       case '/forbidden':
-        return respondXML(request, response, 403, 'Forbidden');
+        return respondXML(request, response, 403, 'You do not have access to this content.');
       case '/internal':
-        return respondXML(request, response, 500, 'Internal Server Error');
+        return respondXML(request, response, 500, 'Internal Server Error. Something went wrong.');
       case '/notImplemented':
-        return respondXML(request, response, 501, 'Not Implemented');
+        return respondXML(request, response, 501,
+          'A get request has not been implemented yet. Check again later for updated content.');
       default:
-        return respondXML(request, response, 404, 'Not Found');
+        return respondXML(request, response, 404, 'The page you are looking for was not found.');
     }
   }
 
   // Else, respond with JSON
   switch (path) {
     case '/success':
-      return respondJSON(request, response, 200, 'Success');
+      return respondJSON(request, response, 200, 'This is a successful response.');
     case '/badRequest':
-      if (valid) { return respondJSON(request, response, 200, 'Bad Request'); }
-      return respondJSON(request, response, 400, 'Bad Request');
+      if (valid) { return respondJSON(request, response, 200, 'This request has the required parameters.'); }
+      return respondJSON(request, response, 400, 'Missing valid query parameter set to true.');
     case '/unauthorized':
-      if (loggedIn) { return respondJSON(request, response, 200, 'Unauthorized'); }
-      return respondJSON(request, response, 401, 'Unauthorized');
+      if (loggedIn) { return respondJSON(request, response, 200, 'You have successfully viewed the content.'); }
+      return respondJSON(request, response, 401, 'Missing loggedIn query parameter set to yes.');
     case '/forbidden':
-      return respondJSON(request, response, 403, 'Forbidden');
+      return respondJSON(request, response, 403, 'You do not have access to this content.');
     case '/internal':
-      return respondJSON(request, response, 500, 'Internal Server Error');
+      return respondJSON(request, response, 500, 'Internal Server Error. Something went wrong.');
     case '/notImplemented':
-      return respondJSON(request, response, 501, 'Not Implemented');
+      return respondJSON(request, response, 501,
+        'A get request has not been implemented yet. Check again later for updated content.');
     default:
-      return respondJSON(request, response, 404, 'Not Found');
+      return respondJSON(request, response, 404, 'The page you are looking for was not found.');
   }
 };
 
