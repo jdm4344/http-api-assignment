@@ -6,6 +6,10 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
+    // Create page elements
+    const status = document.createElement("h1");
+    const message = document.createElement("p");
+
     // Interprets the response from the server
     const handleResponse = (xhr) => {
       console.dir("handleResponse(xhr) = " + xhr);
@@ -14,25 +18,31 @@
       const type = xhr.getResponseHeader("content-type");
       // Get the content object on the page
       const content  = document.querySelector("#content");
-      
-      // Create page elements
-      const status = document.createElement("h1");
-      const message = document.createElement("p");
 
       // Fill elements based on content-type
       if(type == "application/json"){
         const obj = JSON.parse(xhr.response);
 
         // Check if ID exists - will for failures
-        if(obj.id) { status.textContent = `${obj.id}`; }
-        message.textContent = `${obj.message}`;
+        if(obj.id) { 
+          status.textContent = `${obj.id}`; 
+          message.textContent = `${obj.message}`;
+        } 
+        else {
+          status.textContent = "";
+          message.textContent = `${obj.message}`;
+        }
       } 
       else if(type == "text/xml"){
         // Check if ID exists - will for failures
         if(xhr.responseXML.querySelector("id")){
-          status.textContent = xhr.responseXML.querySelector("id").textContent; 
+          status.textContent = xhr.responseXML.querySelector("id").textContent;
+          message.textContent = xhr.responseXML.querySelector("message").textContent;
         }
-        message.textContent = xhr.responseXML.querySelector("message").textContent;
+        else{
+          status.textContent = "";
+          message.textContent = xhr.responseXML.querySelector("message").textContent;
+        }
       }
 
       // Add the status and message to the page
