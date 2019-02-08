@@ -62,56 +62,42 @@ const parseResponse = (request, response, acceptedTypes, path, valid=false, logg
   if(acceptedTypes[0] == "text/xml"){
     switch (path) {
       case "/success":
-        respondXML(request, respond, 200, "Success");
-        break;
+        return respondXML(request, respond, 200, "Success");
       case "/badrequest":
-        if(valid) {respondXML(request, respond, 200, "Bad Request"); }
-        else { respondXML(request, respond, 400, "Bad Request"); }
-        break;
+        if(valid) { return respondXML(request, respond, 200, "Bad Request"); }
+        else { return respondXML(request, respond, 400, "Bad Request"); }
       case "/unauthorized":
-        if(loggedIn) {respondXML(request, respond, 200, "Unauthorized"); }
-        else { respondXML(request, respond, 401, "Unauthorized"); }
-        break;
+        if(loggedIn) { return respondXML(request, respond, 200, "Unauthorized"); }
+        else { return respondXML(request, respond, 401, "Unauthorized"); }
       case "/forbidden":
-        respondXML(request, respond, 403, "Forbidden");
-        break;
+        return respondXML(request, respond, 403, "Forbidden");
       case "/internal":
-        respondXML(request, respond, 500, "Internal Server Error");
-        break;
+        return respondXML(request, respond, 500, "Internal Server Error");
       case "/notImplemented":
-        respondXML(request, respond, 501, "Not Implemented");
-        break;
+        return respondXML(request, respond, 501, "Not Implemented");
       default:
-        respondXML(request, respond, 404, "Not Found");
-        break;
+        return respondXML(request, respond, 404, "Not Found");
     }
   }
 
   // Else, respond with JSON
   switch (path) {
     case "/success":
-      respondJSON(request, response, 200, "Success");
-      break;
+      return respondJSON(request, response, 200, "Success");
     case "/badrequest":
-      if(valid) { respondJSON(request, respond, 200, "Bad Request"); }
-      else { respondJSON(request, respond, 400, "Bad Request"); }
-      break;
+      if(valid) { return respondJSON(request, respond, 200, "Bad Request"); }
+      else { return respondJSON(request, respond, 400, "Bad Request"); }
     case "/unauthorized":
-      if(loggedIn) { respondJSON(request, respond, 200, "Unauthorized"); }
-      else { respondJSON(request, respond, 401, "Unauthorized"); }
-      break;
+      if(loggedIn) { return respondJSON(request, respond, 200, "Unauthorized"); }
+      else { return respondJSON(request, respond, 401, "Unauthorized"); }
     case "/forbidden":
-      respondJSON(request, respond, 403, "Forbidden");
-      break;
+      return respondJSON(request, respond, 403, "Forbidden");
     case "/internal":
-      respondJSON(request, respond, 500, "Internal Server Error");      
-      break;
+      return respondJSON(request, respond, 500, "Internal Server Error");    
     case "/notImplemented":
-     respondJSON(request, respond, 501, "Not Implemented");      
-      break;
+      return respondJSON(request, respond, 501, "Not Implemented");      
     default:
-      respondJSON(request, respond, 404, "Not Found");
-      break;
+      return respondJSON(request, respond, 404, "Not Found");
   }
 };
 
