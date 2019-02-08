@@ -8,6 +8,8 @@
   <script type="text/babel">
     // Interprets the response from the server
     const handleResponse = (xhr) => {
+      console.dir("handleResponse(xhr) = " + xhr);
+
       // Retireve content type 
       const type = xhr.getResponseHeader("content-type");
       // Get the content object on the page
@@ -21,11 +23,15 @@
       if(type == "applicaion/json"){
         const obj = JSON.parse(xhr.response);
 
-        status.textContent = `${obj.status}`;
+        // Check if ID exists - will for failures
+        if(obj.id) { status.textContent = `${obj.id}`; }
         message.textContent = `${obj.message}`;
       } 
       else if(type == "text/xml"){
-        status.textContent = xhr.responseXML.querySelector("status").textContent;
+        // Check if ID exists - will for failures
+        if(xhr.responseXML.querySelector("id")){
+          status.textContent = xhr.responseXML.querySelector("id").textContent; 
+        }
         message.textContent = xhr.responseXML.querySelector("message").textContent;
       }
 
@@ -41,19 +47,12 @@
       console.log(url);
       // Get the desired type
       let type = document.querySelector("#type").value;
-      let parsedType = "";
-
-      // Parse type
-      if(type === "XML"){
-        parsedType = "text/xml";
-      } else {
-        parsedType = "application/json";
-      }
+      console.log(type);
 
       // Send request
       const xhr = new XMLHttpRequest();
       xhr.open("GET", url); // GET request
-      xhr.setRequestHeader("Accept", parsedType); // Accept header
+      xhr.setRequestHeader("Accept", type); // Accept header
       xhr.onload = () => handleResponse(xhr);
       xhr.send();
     };
@@ -62,8 +61,8 @@
     const init = () => {
       const sendButton = document.querySelector("#send");
 
-      const sendRequest = () => sendAjax(page);
-      sendButton.addEventListener("click", sendRequest);
+      //const sendRequest = () => sendAjax();
+      sendButton.addEventListener("click", sendAjax);
     };
 
     window.onload = init;

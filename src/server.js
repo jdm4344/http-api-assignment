@@ -6,13 +6,14 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const urlStruct = {
   '/success': responseHandler.parseResponse,
-  '/badrequest': responseHandler.parseResponse,
+  '/badRequest': responseHandler.parseResponse,
   '/unauthorized': responseHandler.parseResponse,
   '/forbidden': responseHandler.parseResponse,
   '/internal': responseHandler.parseResponse,
   '/notImplemented': responseHandler.parseResponse,
+  '/notFound': responseHandler.parseResponse,
   '/style.css': responseHandler.getCss,
-  notFound: responseHandler.getIndex,
+  notFound: responseHandler.notFound,
 };
 
 const onRequest = (request, response) => {
