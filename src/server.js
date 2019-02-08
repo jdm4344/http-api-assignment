@@ -74,11 +74,12 @@ const onRequest = (request, response) => {
   // console.dir("onRequest: " + parsedUrl.pathname);
   const acceptedTypes = request.headers.accept.split(','); // header is a string divided by commas
 
-  if (request.method === 'POST') {
-    handlePost(request, response, parsedUrl, acceptedTypes);
-  } else if (urlStruct[parsedUrl.pathname]) { // Check if request is for XML, if not, send JSON
-    // urlStruct[parsedUrl.pathname](request, response, acceptedTypes, parsedUrl.pathname);
-    responseHandler.parseResponse(request, response, acceptedTypes, parsedUrl.pathname);
+  // if (request.method === 'POST') {
+  //   handlePost(request, response, parsedUrl, acceptedTypes);
+  // } else
+  if (urlStruct[parsedUrl.pathname]) { // Check if request is for XML, if not, send JSON
+    urlStruct[parsedUrl.pathname](request, response, acceptedTypes, parsedUrl.pathname);
+    //responseHandler.parseResponse(request, response, acceptedTypes, parsedUrl.pathname);
   } else {
     urlStruct.notFound(request, response, acceptedTypes, parsedUrl.pathname);
   }
