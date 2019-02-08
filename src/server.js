@@ -5,25 +5,26 @@ const responseHandler = require('./responses.js');
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const urlStruct = {
-  '/': responseHandler.getIndex,
-  '/badrequest': responseHandler.getIndex,
-  '/unauthorized': responseHandler.getIndex,
-  '/forbidden': responseHandler.getIndex,
-  '/internal': responseHandler.getIndex,
-  '/notImplemented': responseHandler.getIndex,
+  '/success': responseHandler.parseResponse,
+  '/badrequest': responseHandler.parseResponse,
+  '/unauthorized': responseHandler.parseResponse,
+  '/forbidden': responseHandler.parseResponse,
+  '/internal': responseHandler.parseResponse,
+  '/notImplemented': responseHandler.parseResponse,
   '/style.css': responseHandler.getCss,
-  index: responseHandler.getIndex,
+  notFound: responseHandler.getIndex,
 };
 
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
+  // console.dir("onRequest: " + parsedUrl.pathname);
   const acceptedTypes = request.headers.accept.split(','); // header is a string divided by commas
 
   // Check if request is for XML, if not, send JSON
   if (urlStruct[parsedUrl.pathname]) {
-    urlStruct[parsedUrl.pathname](request, response, acceptedTypes);
+    urlStruct[parsedUrl.pathname](request, response, acceptedTypes, parsedUrl.pathname);
   } else {
-    urlStruct.index(request, response, acceptedTypes);
+    urlStruct.notFound(request, response, acceptedTypes, parsedUrl.pathname);
   }
 };
 

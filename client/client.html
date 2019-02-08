@@ -44,10 +44,10 @@
       let parsedType = "";
 
       // Parse type
-      if(type === "JSON"){
-        parsedType = "application/json";
-      } else if(type === "XML"){
+      if(type === "XML"){
         parsedType = "text/xml";
+      } else {
+        parsedType = "application/json";
       }
 
       // Send request
