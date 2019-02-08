@@ -56,7 +56,7 @@ const respondXML = (request, response, status, message) => {
 };
 
 // Determines type and format of a response based on request
-const parseResponse = (request, response, acceptedTypes, path, valid = false, loggedIn = false) => {
+const parseResponse = (request, response, acceptedTypes, path, valid = true, loggedIn = true) => {
   // console.dir(`parseResponse(acceptedTypes = ${acceptedTypes})`);
   // console.log(`parseResponse(path = ${path})`);
 
@@ -105,6 +105,32 @@ const parseResponse = (request, response, acceptedTypes, path, valid = false, lo
   }
 };
 
+// Checks for request for /badRequest or /unauthorized and parses query parameters
+const checkValid = (request, response, pathName, acceptedTypes, bodyParams) => {
+  if (pathName === '/badRequest') {
+    if (!bodyParams.valid || !bodyParams.valid === 'true') {
+      parseResponse(request, response, acceptedTypes, pathName, false);
+    } else {
+      parseResponse(request, response, acceptedTypes, pathName, true);
+    }
+  } else if (pathName === '/unauthorized') {
+    if (!bodyParams.loggedIn || !bodyParams.loggedIn === 'yes') {
+      parseResponse(
+        request,
+        response,
+        acceptedTypes,
+        pathName,
+        false,
+        false,
+      );
+    } else {
+      parseResponse(request, response, acceptedTypes, pathName, false, true);
+    }
+  } else {
+    parseResponse(request, response, acceptedTypes, pathName);
+  }
+};
+
 // Returns index to the client
 const notFound = (request, response) => {
   respond(request, response, 404, index, 'text/html');
@@ -118,5 +144,5 @@ const getCss = (request, response) => {
 module.exports = {
   notFound,
   getCss,
-  parseResponse,
+  checkValid,
 };
