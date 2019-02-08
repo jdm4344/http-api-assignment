@@ -20,7 +20,7 @@
       const message = document.createElement("p");
 
       // Fill elements based on content-type
-      if(type == "applicaion/json"){
+      if(type == "application/json"){
         const obj = JSON.parse(xhr.response);
 
         // Check if ID exists - will for failures
@@ -41,7 +41,7 @@
     };
 
     // Sends request to server
-    const sendAjax = () => {
+    const sendAjax = (e) => {
       // Get the desired url
       let url = document.querySelector("#page").value;
       console.log(url);
@@ -51,18 +51,23 @@
 
       // Send request
       const xhr = new XMLHttpRequest();
-      xhr.open("GET", url); // GET request
-      xhr.setRequestHeader("Accept", type); // Accept header
+      xhr.open("GET", url); 
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.setRequestHeader("Accept", type);
       xhr.onload = () => handleResponse(xhr);
       xhr.send();
+
+      e.preventDefault();
+      return false;
     };
 
     // Set up event listener
     const init = () => {
       const sendButton = document.querySelector("#send");
 
-      //const sendRequest = () => sendAjax();
-      sendButton.addEventListener("click", sendAjax);
+      const sendRequest = (e) => sendAjax(e);
+
+      sendButton.addEventListener("click", sendRequest);
     };
 
     window.onload = init;

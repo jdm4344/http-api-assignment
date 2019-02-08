@@ -1,5 +1,7 @@
 const http = require('http');
 const url = require('url');
+const query = require('querystring');
+
 const responseHandler = require('./responses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
@@ -16,14 +18,64 @@ const urlStruct = {
   notFound: responseHandler.notFound,
 };
 
+const handlePost = (request, response, parsedUrl) => {
+  if (parsedUrl.pathname === '/badRequest') {
+    const body = [];
+
+    request.on('error', (err) => {
+      console.dir(err);
+      response.statusCode = 400;
+      response.end();
+    });
+
+    request.on('data', (chunk) => {
+      body.push(chunk);
+    });
+
+    request.on('end', () => {
+      const bodyString = Buffer.concat(body).toString();
+      const bodyParams = query.parse(bodyString); // convert string to JSON object
+      console.dir(bodyParams);
+
+      // let valid = false;
+
+      // responseHandler.parseResponse(request, response, acceptedTypes, parsedUrl.pathname, true);
+    });
+  } else if (parsedUrl.pathname === '/unauthorized') {
+    const body = [];
+
+    request.on('error', (err) => {
+      console.dir(err);
+      response.statusCode = 400;
+      response.end();
+    });
+
+    request.on('data', (chunk) => {
+      body.push(chunk);
+    });
+
+    request.on('end', () => {
+      const bodyString = Buffer.concat(body).toString();
+      const parameters = query.parse(bodyString); // convert string to JSON object
+      console.dir(err);
+
+      // let loggedIn = false;
+
+      // responseHandler.parseResponse(request, response, acceptedTypes, parsedUrl.pathname, false, true);
+    });
+  }
+};
+
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
   // console.dir("onRequest: " + parsedUrl.pathname);
   const acceptedTypes = request.headers.accept.split(','); // header is a string divided by commas
 
-  // Check if request is for XML, if not, send JSON
-  if (urlStruct[parsedUrl.pathname]) {
-    urlStruct[parsedUrl.pathname](request, response, acceptedTypes, parsedUrl.pathname);
+  if (request.method === 'POST') {
+    handlePost(request, response, parsedUrl);
+  } else if (urlStruct[parsedUrl.pathname]) { // Check if request is for XML, if not, send JSON
+    // urlStruct[parsedUrl.pathname](request, response, acceptedTypes, parsedUrl.pathname);
+    responseHandler.parseResponse(request, response, acceptedTypes, parsedUrl.pathname);
   } else {
     urlStruct.notFound(request, response, acceptedTypes, parsedUrl.pathname);
   }
